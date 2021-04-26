@@ -130,7 +130,8 @@ def plot_top_n_products(title, products, n):
     _slice = slice(0, n, None)
     fig, ax = plt.subplots(1, 1)
     fig.suptitle(f"{title} - kr {total:.2f},-")
-    ax.set_title(f"Ukjent: kr {unknown:.2f},-")
+    if unknown > 0:
+        ax.set_title(f"Ukjent: kr {unknown:.2f},-")
     bottom = list(map(lambda x: x.text, keys[_slice]))
     width = list(map(lambda x: x['total'], values[_slice]))
     ax.barh(bottom, width, color='lightblue')
@@ -151,7 +152,6 @@ def main(filename, n):
         # Parse JSON into an object with attributes corresponding to dict keys.
         x = json.load(json_file, object_hook=lambda d: SimpleNamespace(**d))
 
-    # process_transactions(x.TransactionsInfo.Transactions)
     weeks, months, years = group_transactions(x.TransactionsInfo.Transactions)
 
     plot_top_n_periodically(lambda x: x.strftime("%B %Y"), months, n)
